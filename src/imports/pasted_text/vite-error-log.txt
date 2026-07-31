@@ -1,0 +1,454 @@
+PS C:\IT Equipment Repair System 3> npm run dev
+
+> @figma/my-make-file@0.0.1 dev
+> vite
+
+Port 5173 is in use, trying another one...
+
+  VITE v6.3.5  ready in 469 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+21:15:31 [vite] Internal server error: Failed to resolve import "react/jsx-dev-runtime" from "src/main.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/main.tsx:6:54
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import { createRoot } from "react-dom/client";
+  3  |  import App from "./app/App.tsx";
+      at TransformPluginContext._formatLog (file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:42499:41)
+      at TransformPluginContext.error (file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:42496:16)
+      at normalizeUrl (file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:40475:23)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:40594:37
+      at async Promise.all (index 0)
+      at async TransformPluginContext.transform (file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:40521:7)
+      at async EnvironmentPluginContainer.transform (file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:42294:18)
+      at async loadAndTransform (file:///C:/IT%20Equipment%20Repair%20System%203/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:35735:27)
+21:15:31 [vite] Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/main.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/main.tsx:6:54
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import { createRoot } from "react-dom/client";
+  3  |  import App from "./app/App.tsx";
+21:15:31 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/App.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/App.tsx:7:4
+  1  |  import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
+     |                                    ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:31 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/routes.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/routes.tsx:15:13
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import { createBrowserRouter, Navigate } from "react-router";
+  3  |  import Login from "./pages/Login";
+21:15:31 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/sonner.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/sonner.tsx:10:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/Login.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/Login.tsx:63:14
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/Dashboard.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/Dashboard.tsx:85:14
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+X [ERROR] Could not resolve "react"
+
+    node_modules/react-router/dist/development/chunk-4LKRSAEJ.mjs:57:23:
+      57 │ import * as React from "react";
+         ╵                        ~~~~~~~
+
+  You can mark the path "react" as external to exclude it from the bundle, which will remove this
+  error and leave the unresolved path in the bundle.
+
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/Register.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/Register.tsx:102:18
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/Home.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/Home.tsx:97:10
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/UpdateRepair.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/UpdateRepair.tsx:108:118
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/ChatBot.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/ChatBot.tsx:111:12
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/CheckStatus.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/CheckStatus.tsx:59:99
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/ReportRepair.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/ReportRepair.tsx:146:16
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/pages/UserManagement.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/pages/UserManagement.tsx:93:32
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+X [ERROR] Could not resolve "react"
+
+    node_modules/react-router/dist/development/chunk-JZWAC4HX.mjs:5426:23:
+      5426 │ import * as React from "react";
+           ╵                        ~~~~~~~
+
+  You can mark the path "react" as external to exclude it from the bundle, which will remove this
+  error and leave the unresolved path in the bundle.
+
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x3)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x4)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x5)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x6)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x7)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/card.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/card.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x8)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/textarea.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/textarea.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x3)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x4)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x5)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x6)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x7)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x8)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/badge.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/badge.tsx:38:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/badge.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/badge.tsx:38:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/badge.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/badge.tsx:38:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x3)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/input.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/input.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/input.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/input.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/input.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/input.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x3)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/input.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/input.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x4)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/input.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/input.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x5)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/alert.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/alert.tsx:28:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/select.tsx:16:9
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/select.tsx:16:9
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/textarea.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/textarea.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/button.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/button.tsx:50:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/badge.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/badge.tsx:38:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/input.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/input.tsx:7:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/alert.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/alert.tsx:28:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/select.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/select.tsx:16:9
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/label.tsx:13:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/label.tsx:13:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/label.tsx:13:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x3)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/label.tsx:13:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x4)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/dialog.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/dialog.tsx:12:9
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/dialog.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/dialog.tsx:12:9
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope; (x2)
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/label.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/label.tsx:13:4
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/LocationPicker.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/LocationPicker.tsx:32:36
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/dialog.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/dialog.tsx:12:9
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) Pre-transform error: Failed to resolve import "react/jsx-dev-runtime" from "src/app/components/ui/table.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/IT Equipment Repair System 3/src/app/components/ui/table.tsx:13:6
+  1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+     |                          ^
+  2  |  import * as RefreshRuntime from "/@react-refresh";
+  3  |  const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+21:15:32 [vite] (client) error while updating dependencies:
+Error: Build failed with 2 errors:
+node_modules/react-router/dist/development/chunk-4LKRSAEJ.mjs:57:23: ERROR: Could not resolve "react"
+node_modules/react-router/dist/development/chunk-JZWAC4HX.mjs:5426:23: ERROR: Could not resolve "react"
+    at failureErrorWithLog (C:\IT Equipment Repair System 3\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\IT Equipment Repair System 3\node_modules\esbuild\lib\main.js:926:25
+    at C:\IT Equipment Repair System 3\node_modules\esbuild\lib\main.js:1345:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+21:15:32 [vite] (client) ✨ new dependencies optimized: clsx, tailwind-merge
