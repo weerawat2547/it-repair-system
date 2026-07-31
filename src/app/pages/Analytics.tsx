@@ -5,7 +5,17 @@ import {
 } from 'recharts';
 import { BarChart2, RefreshCw, TrendingUp, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
-const API = 'http://localhost/it_repair_api/analytics.php';
+// --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+);
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost/it_repair_api'
+  : 'http://it-repair-api.freehosting.dev';
+
+const API = `${API_BASE_URL}/analytics.php`;
 
 const STATUS_COLORS: Record<string, string> = {
   pending:     '#f59e0b',
@@ -91,7 +101,7 @@ const DEMO: AnalyticsData = {
   ],
 };
 
-const CustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }: any) => {
+const CustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   if (percent < 0.05) return null;
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;

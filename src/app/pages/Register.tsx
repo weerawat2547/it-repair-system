@@ -4,6 +4,16 @@ import { Wrench, AlertCircle, CheckCircle, Eye, EyeOff, ArrowRight } from 'lucid
 import { mockUsers } from '../utils/mockData';
 import { User } from '../types';
 
+// --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+);
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost/it_repair_api'
+  : 'http://it-repair-api.freehosting.dev';
+
 // ต้องอยู่นอก Register เพื่อไม่ให้ React สร้าง component ใหม่ทุก render
 function Field({
   id, label, type = 'text', placeholder, value, onChange, required = false, rightEl,
@@ -71,7 +81,8 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const res = await fetch('http://localhost/it_repair_api/register.php', {
+      // 🔄 ใช้ API_BASE_URL แบบ Dynamic
+      const res = await fetch(`${API_BASE_URL}/register.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -91,6 +102,7 @@ export default function Register() {
         setError(result.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่');
       }
     } catch {
+      // หากเชื่อมต่อ API ไม่ได้ จะบันทึกลง LocalStorage ชั่วคราว
       const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
       const allUsers = [...mockUsers, ...existingUsers];
       if (allUsers.find((u) => u.username === formData.username)) {

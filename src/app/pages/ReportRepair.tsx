@@ -9,8 +9,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { FileText, CheckCircle, Upload, X, ImageIcon, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import LocationPicker from '../components/LocationPicker';
-import { repairApi, equipmentApi } from '../utils/api';
+import { equipmentApi } from '../utils/api';
 import { User } from '../types';
+
+// --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+);
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost/it_repair_api'
+  : 'http://it-repair-api.freehosting.dev';
 
 export default function ReportRepair() {
   const [submitted, setSubmitted] = useState(false);
@@ -105,7 +115,7 @@ export default function ReportRepair() {
 
     try {
       const fd = new FormData();
-      fd.append('user_id',              currentUser.id);
+      fd.append('user_id',               currentUser.id);
       fd.append('equipment_type_id',    formData.equipmentTypeId || '');
       fd.append('equipment_model',      formData.equipmentModel);
       fd.append('serial_number',        formData.serialNumber);
@@ -116,7 +126,8 @@ export default function ReportRepair() {
       fd.append('priority',             priority);
       images.forEach((img) => fd.append('images[]', img));
 
-      const res = await fetch('http://localhost/it_repair_api/repair_requests.php', {
+      // 🔄 ใช้ API_BASE_URL แบบ Dynamic
+      const res = await fetch(`${API_BASE_URL}/repair_requests.php`, {
         method: 'POST',
         body: fd,
       }).then(r => r.json());

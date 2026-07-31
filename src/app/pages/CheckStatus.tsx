@@ -3,8 +3,16 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Search, Clock, CheckCircle, XCircle, AlertCircle, Calendar, User, MapPin, Wrench, RefreshCw } from 'lucide-react';
 import { User as UserType } from '../types';
-import { repairApi } from '../utils/api';
-import { mockRepairRequests } from '../utils/mockData';
+
+// --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+);
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost/it_repair_api'
+  : 'http://it-repair-api.freehosting.dev';
 
 interface StatusConfig {
   label: string; bg: string; text: string; border: string; icon: React.ReactNode;
@@ -37,27 +45,32 @@ export default function CheckStatus() {
       const user = JSON.parse(userStr);
       setCurrentUser(user);
       loadRequests(user);
+    } else {
+      setLoading(false);
     }
   }, []);
 
   const loadRequests = async (user: UserType) => {
     setLoading(true);
     try {
-      const res = await repairApi.getAll(user.id, user.role);
-      setRequests(res.data);
-    } catch {
-      const list = user.role === 'student'
-        ? mockRepairRequests.filter((r) => r.userId === user.id)
-        : mockRepairRequests;
-      setRequests(list.map((r) => ({
-        id: r.id, request_no: r.id,
-        equipment_type_name: r.equipmentType, equipment_model: r.equipmentModel,
-        location_description: r.location, problem_description: r.problemDescription,
-        status: r.status, priority: r.priority,
-        technician_name: r.assignedTechnicianName, technician_notes: r.technicianNotes,
-        user_name: r.userName, user_phone: r.userPhone,
-        created_at: r.createdAt, completed_at: r.completedAt,
-      })));
+      // 🔄 ยิง API ไปที่ Dynamic Base URL บน localhost หรือ server จริง
+      const res = await fetch(`${API_BASE_URL}/repair_requests.php?user_id=${user.id}&role=${user.role}`);
+      if (!res.ok) throw new Error('Network error');
+      
+      const data = await res.json();
+      
+      // รองรับโครงสร้าง Response ทั้งแบบ Array ตรงๆ และแบบ { data: [...] }
+      if (Array.isArray(data)) {
+        setRequests(data);
+      } else if (data && Array.isArray(data.data)) {
+        setRequests(data.data);
+      } else {
+        setRequests([]);
+      }
+    } catch (error) {
+      console.error('Failed to load repair requests:', error);
+      // หากเกิดข้อผิดพลาด ให้แสดงรายการว่างเปล่า (ไม่ดึง Mock Data มาโชว์แล้ว)
+      setRequests([]);
     } finally {
       setLoading(false);
     }
@@ -66,17 +79,19 @@ export default function CheckStatus() {
   const filteredRequests = requests.filter((req) => {
     const term = searchTerm.toLowerCase();
     return (
-      (req.request_no || req.id || '').toLowerCase().includes(term) ||
+      (req.request_no || req.id || '').toString().toLowerCase().includes(term) ||
       (req.equipment_type_name || '').toLowerCase().includes(term) ||
       (req.location_description || '').toLowerCase().includes(term)
     );
   });
 
-  const fmtDate = (d: string) =>
-    new Date(d).toLocaleDateString('th-TH', {
+  const fmtDate = (d: string) => {
+    if (!d) return '-';
+    return new Date(d).toLocaleDateString('th-TH', {
       year: 'numeric', month: 'long', day: 'numeric',
       hour: '2-digit', minute: '2-digit',
     });
+  };
 
   return (
     <div className="space-y-5">
@@ -111,7 +126,7 @@ export default function CheckStatus() {
       {loading ? (
         <div className="bg-white rounded-2xl p-12 text-center border border-slate-200/60 shadow-sm">
           <RefreshCw className="size-8 animate-spin text-blue-500 mx-auto mb-3" />
-          <p className="text-slate-500 text-sm">กำลังโหลด...</p>
+          <p className="text-slate-500 text-sm">กำลังโหลดข้อมูล...</p>
         </div>
       ) : filteredRequests.length === 0 ? (
         <div className="bg-white rounded-2xl p-12 text-center border border-slate-200/60 shadow-sm">
@@ -121,8 +136,8 @@ export default function CheckStatus() {
       ) : (
         <div className="space-y-4">
           {filteredRequests.map((request) => {
-            const st = STATUS[request.status];
-            const pr = PRIORITY[request.priority];
+            const st = STATUS[request.status] || STATUS.pending;
+            const pr = PRIORITY[request.priority] || PRIORITY.medium;
             return (
               <div key={request.id} className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                 {/* Card header */}
@@ -130,7 +145,7 @@ export default function CheckStatus() {
                   <div>
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="text-slate-800 font-semibold">
-                        {request.equipment_type_name || '-'}
+                        {request.equipment_type_name || request.equipment_type || '-'}
                         {request.equipment_model && ` — ${request.equipment_model}`}
                       </span>
                     </div>
@@ -162,7 +177,7 @@ export default function CheckStatus() {
                           <MapPin className="size-4 text-slate-400 mt-0.5 shrink-0" />
                           <div>
                             <p className="text-slate-500 text-xs mb-0.5">สถานที่</p>
-                            <p className="text-slate-700 text-sm">{request.location_description}</p>
+                            <p className="text-slate-700 text-sm">{request.location_description || '-'}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-2.5">
@@ -196,7 +211,7 @@ export default function CheckStatus() {
                       {/* Problem */}
                       <div className="bg-slate-50 rounded-xl px-4 py-3">
                         <p className="text-slate-500 text-xs mb-1">รายละเอียดปัญหา</p>
-                        <p className="text-slate-700 text-sm">{request.problem_description}</p>
+                        <p className="text-slate-700 text-sm">{request.problem_description || '-'}</p>
                       </div>
 
                       {/* Technician notes */}
@@ -218,7 +233,7 @@ export default function CheckStatus() {
                       )}
                     </div>
 
-                    {/* Right side: Enlarged QR Code container */}
+                    {/* Right side: QR Code */}
                     <div className="w-full md:w-auto flex flex-col items-center justify-center p-3 bg-slate-50/80 border border-slate-200/80 rounded-2xl shrink-0 self-center md:self-start">
                       <img
                         src="/line-oa-qr.jpg"

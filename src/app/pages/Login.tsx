@@ -3,9 +3,19 @@ import { useNavigate, Link } from 'react-router';
 import { Wrench, AlertCircle, Eye, EyeOff, ArrowRight, ChevronDown, Shield, Clock, Star } from 'lucide-react';
 import { mockUsers } from '../utils/mockData';
 
+// --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+);
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost/it_repair_api'
+  : 'http://it-repair-api.freehosting.dev';
+
 const TEST_ACCOUNTS = [
-  { role: 'ผู้ดูแลระบบ', username: 'admin',   password: 'admin123',    color: 'text-red-500' },
-  { role: 'ช่างซ่อม',    username: 'tech1',   password: 'tech123',     color: 'text-purple-500' },
+  { role: 'ผู้ดูแลระบบ', username: 'admin',    password: 'admin123',    color: 'text-red-500' },
+  { role: 'ช่างซ่อม',    username: 'tech1',    password: 'tech123',     color: 'text-purple-500' },
   { role: 'นักศึกษา',    username: 'student', password: 'student1234', color: 'text-blue-500' },
 ];
 
@@ -39,7 +49,8 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch('http://localhost/it_repair_api/login.php', {
+      // 🔄 ใช้ API_BASE_URL แบบ Dynamic
+      const res = await fetch(`${API_BASE_URL}/login.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -52,7 +63,11 @@ export default function Login() {
         setError(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
       }
     } catch {
-      setError('เชื่อมต่อ XAMPP ไม่ได้ — กรุณาตรวจสอบว่า Apache และ MySQL เปิดอยู่');
+      setError(
+        isLocalhost
+          ? 'เชื่อมต่อ XAMPP ไม่ได้ — กรุณาตรวจสอบว่า Apache และ MySQL เปิดอยู่'
+          : 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ API ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต'
+      );
     } finally {
       setLoading(false);
     }

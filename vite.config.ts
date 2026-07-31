@@ -3,7 +3,6 @@ import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
-
 function figmaAssetResolver() {
   return {
     name: 'figma-asset-resolver',
@@ -28,6 +27,17 @@ export default defineConfig({
     alias: {
       // Alias @ to the src directory
       '@': path.resolve(__dirname, './src'),
+    },
+  },
+
+  // 🚀 เพิ่ม Server Proxy ตรงนี้เพื่อแก้ปัญหา CORS
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost/PROJECTREPAIRIT',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 
