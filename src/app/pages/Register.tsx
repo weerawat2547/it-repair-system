@@ -6,13 +6,14 @@ import { User } from '../types';
 
 // --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 );
 
+// 🌐 ถ้ารันบน Vercel ให้ใช้ ngrok URL (ต้องเป็น https://)
 const API_BASE_URL = isLocalhost
   ? 'http://localhost/it_repair_api'
-  : 'http://it-repair-api.freehosting.dev';
+  : 'https://pajamas-luckless-operation.ngrok-free.dev/it_repair_api';
 
 // ต้องอยู่นอก Register เพื่อไม่ให้ React สร้าง component ใหม่ทุก render
 function Field({
@@ -81,10 +82,13 @@ export default function Register() {
 
     setLoading(true);
     try {
-      // 🔄 ใช้ API_BASE_URL แบบ Dynamic
+      // 🔄 ใช้ API_BASE_URL แบบ Dynamic พร้อมแนบ Header ข้ามหน้าเตือน ngrok
       const res = await fetch(`${API_BASE_URL}/register.php`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: JSON.stringify({
           username:   formData.username,
           password:   formData.password,

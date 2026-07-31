@@ -1,5 +1,16 @@
 <?php
-// --- ตั้งค่า Database (ตรวจจับ Local vs Production อัตโนมัติ) ---
+// --- 1. ตั้งค่า CORS (ปลดล็อกให้รองรับทุก Header รวมถืง ngrok-skip-browser-warning) ---
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: *"); // 👈 แก้เป็น * เพื่อยอมรับทุก Header ทันที
+
+// ตอบรับ Preflight Request (OPTIONS) ทันที
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// --- 2. ตั้งค่า Database (ตรวจจับ Local vs Production อัตโนมัติ) ---
 $server_name = $_SERVER['SERVER_NAME'] ?? 'localhost';
 $is_local = in_array($server_name, ['localhost', '127.0.0.1']);
 

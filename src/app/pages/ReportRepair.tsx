@@ -14,13 +14,14 @@ import { User } from '../types';
 
 // --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 );
 
+// 🌐 ถ้ารันบน Vercel ให้ใช้ ngrok URL (ต้องเป็น https://)
 const API_BASE_URL = isLocalhost
   ? 'http://localhost/it_repair_api'
-  : 'http://it-repair-api.freehosting.dev';
+  : 'https://pajamas-luckless-operation.ngrok-free.dev/it_repair_api';
 
 export default function ReportRepair() {
   const [submitted, setSubmitted] = useState(false);
@@ -126,9 +127,12 @@ export default function ReportRepair() {
       fd.append('priority',             priority);
       images.forEach((img) => fd.append('images[]', img));
 
-      // 🔄 ใช้ API_BASE_URL แบบ Dynamic
+      // 🔄 ใช้ API_BASE_URL แบบ Dynamic พร้อมแนบ Header ข้ามหน้าเตือน ngrok
       const res = await fetch(`${API_BASE_URL}/repair_requests.php`, {
         method: 'POST',
+        headers: {
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: fd,
       }).then(r => r.json());
 
@@ -346,7 +350,7 @@ export default function ReportRepair() {
             <Label>ระดับความเร่งด่วน *</Label>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { value: 'medium', label: 'ปานกลาง',     icon: '🟡', desc: 'ไม่เร่งด่วน ดำเนินการตามคิว' },
+                { value: 'medium', label: 'ปานกลาง',    icon: '🟡', desc: 'ไม่เร่งด่วน ดำเนินการตามคิว' },
                 { value: 'high',   label: 'เร่งด่วน',    icon: '🟠', desc: 'กระทบการทำงาน ต้องซ่อมเร็ว' },
                 { value: 'urgent', label: 'เร่งด่วนมาก', icon: '🔴', desc: 'หยุดการทำงานทันที ต้องซ่อมด่วน' },
               ].map((opt) => (

@@ -7,13 +7,14 @@ import { BarChart2, RefreshCw, TrendingUp, Clock, CheckCircle, AlertCircle, XCir
 
 // --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 );
 
+// 🌐 ถ้ารันบน Vercel ให้ใช้ ngrok URL (ต้องเป็น https://)
 const API_BASE_URL = isLocalhost
   ? 'http://localhost/it_repair_api'
-  : 'http://it-repair-api.freehosting.dev';
+  : 'https://pajamas-luckless-operation.ngrok-free.dev/it_repair_api';
 
 const API = `${API_BASE_URL}/analytics.php`;
 
@@ -122,7 +123,12 @@ export default function Analytics() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(API, { signal: AbortSignal.timeout(5000) });
+      const res = await fetch(API, { 
+        signal: AbortSignal.timeout(5000),
+        headers: {
+          'ngrok-skip-browser-warning': 'true', // ป้องกัน ngrok ติดหน้าเตือนสติ๊กเกอร์ HTML
+        }
+      });
       const json = await res.json();
       if (json.success) {
         setData(json);
@@ -205,7 +211,7 @@ export default function Analytics() {
       {/* Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <StatCard label="ทั้งหมด"       value={totals.total}        icon={<TrendingUp className="size-5 text-blue-600" />}   bg="bg-blue-50"   text="text-blue-700" />
-        <StatCard label="รอดำเนินการ"   value={totals.pending}      icon={<Clock className="size-5 text-amber-600" />}       bg="bg-amber-50"  text="text-amber-700" />
+        <StatCard label="รอดำเนินการ"   value={totals.pending}      icon={<Clock className="size-5 text-amber-600" />}      bg="bg-amber-50"  text="text-amber-700" />
         <StatCard label="กำลังซ่อม"    value={totals.in_progress}  icon={<AlertCircle className="size-5 text-purple-600" />} bg="bg-purple-50" text="text-purple-700" />
         <StatCard label="ซ่อมเสร็จ"    value={totals.completed}    icon={<CheckCircle className="size-5 text-green-600" />}  bg="bg-green-50"  text="text-green-700" />
         <StatCard label="อัตราสำเร็จ"  value={`${completionRate}%`} icon={<XCircle className="size-5 text-slate-500" />}    bg="bg-slate-50"  text="text-slate-700" />

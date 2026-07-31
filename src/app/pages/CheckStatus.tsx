@@ -6,13 +6,14 @@ import { User as UserType } from '../types';
 
 // --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 );
 
+// 🌐 ถ้ารันบน Vercel ให้ใช้ ngrok URL (ต้องเป็น https://)
 const API_BASE_URL = isLocalhost
   ? 'http://localhost/it_repair_api'
-  : 'http://it-repair-api.freehosting.dev';
+  : 'https://pajamas-luckless-operation.ngrok-free.dev/it_repair_api';
 
 interface StatusConfig {
   label: string; bg: string; text: string; border: string; icon: React.ReactNode;
@@ -54,7 +55,11 @@ export default function CheckStatus() {
     setLoading(true);
     try {
       // 🔄 ยิง API ไปที่ Dynamic Base URL บน localhost หรือ server จริง
-      const res = await fetch(`${API_BASE_URL}/repair_requests.php?user_id=${user.id}&role=${user.role}`);
+      const res = await fetch(`${API_BASE_URL}/repair_requests.php?user_id=${user.id}&role=${user.role}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true', // ป้องกัน ngrok ติดหน้าเตือนสติ๊กเกอร์ HTML
+        }
+      });
       if (!res.ok) throw new Error('Network error');
       
       const data = await res.json();
@@ -69,7 +74,7 @@ export default function CheckStatus() {
       }
     } catch (error) {
       console.error('Failed to load repair requests:', error);
-      // หากเกิดข้อผิดพลาด ให้แสดงรายการว่างเปล่า (ไม่ดึง Mock Data มาโชว์แล้ว)
+      // หากเกิดข้อผิดพลาด ให้แสดงรายการว่างเปล่า
       setRequests([]);
     } finally {
       setLoading(false);

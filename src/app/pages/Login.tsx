@@ -5,13 +5,14 @@ import { mockUsers } from '../utils/mockData';
 
 // --- ตรวจสอบ Environment และกำหนด Dynamic API Base URL ---
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 );
 
+// 🌐 ถ้ารันบน Vercel ให้ใช้ ngrok URL (ต้องเป็น https://)
 const API_BASE_URL = isLocalhost
   ? 'http://localhost/it_repair_api'
-  : 'http://it-repair-api.freehosting.dev';
+  : 'https://pajamas-luckless-operation.ngrok-free.dev/it_repair_api';
 
 const TEST_ACCOUNTS = [
   { role: 'ผู้ดูแลระบบ', username: 'admin',    password: 'admin123',    color: 'text-red-500' },
@@ -49,10 +50,13 @@ export default function Login() {
     }
 
     try {
-      // 🔄 ใช้ API_BASE_URL แบบ Dynamic
+      // 🔄 ใช้ API_BASE_URL แบบ Dynamic พร้อมแนบ Header ข้ามหน้าเตือน ngrok
       const res = await fetch(`${API_BASE_URL}/login.php`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: JSON.stringify({ username, password }),
       });
       const result = await res.json();
