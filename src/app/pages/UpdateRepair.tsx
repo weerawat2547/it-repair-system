@@ -6,7 +6,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Label } from '../components/ui/label';
-import { Settings, Clock, CheckCircle, XCircle, Wrench, Calendar, MapPin } from 'lucide-react';
+import { Settings, Clock, CheckCircle, XCircle, Wrench, Calendar, MapPin, MessageSquareText } from 'lucide-react';
 import { toast } from 'sonner';
 import { repairApi, usersApi } from '../utils/api';
 import { mockRepairRequests, mockUsers } from '../utils/mockData';
@@ -77,20 +77,21 @@ export default function UpdateRepair() {
     if (!selectedRequest || !currentUser) return;
     setSaving(true);
     try {
+      // 🔹 ส่งทั้ง technician_notes และ technicianNotes สำรองไว้
       await repairApi.update({
         id:               selectedRequest.id,
         status:           updateData.status,
         assigned_to:      updateData.assignedTo || null,
         technician_notes: updateData.technicianNotes,
+        technicianNotes:  updateData.technicianNotes,
         changed_by:       currentUser.id,
       });
       toast.success('อัปเดตสถานะเรียบร้อยแล้ว', {
-        description: `คำขอ ${selectedRequest.request_no || selectedRequest.id} ได้รับการอัปเดตแล้ว`,
+        description: `คำขอ ${selectedRequest.request_no || selectedRequest.id} ได้รับการอัปเดตและแจ้งเตือนไปยัง LINE เรียบร้อยแล้ว`,
       });
       setDialogOpen(false);
       loadRequests();
     } catch {
-      // fallback: อัปเดต state local
       setRequests((prev) => prev.map((r) =>
         r.id === selectedRequest.id
           ? { ...r, status: updateData.status, assigned_to: updateData.assignedTo, technician_notes: updateData.technicianNotes }
@@ -134,7 +135,7 @@ export default function UpdateRepair() {
             </div>
             <div>
               <CardTitle>อัปเดตการซ่อม</CardTitle>
-              <CardDescription>จัดการและอัปเดตสถานะคำขอซ่อมต่างๆ</CardDescription>
+              <CardDescription>จัดการและอัปเดตสถานะคำขอซ่อมต่างๆ พร้อมส่งการแจ้งเตือนไปยัง LINE OA</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -186,10 +187,24 @@ export default function UpdateRepair() {
                     </div>
                   </div>
                 </div>
+
                 <div className="border-t pt-4">
                   <p className="text-sm font-semibold text-gray-700 mb-1">รายละเอียดปัญหา</p>
                   <p className="text-sm text-gray-600">{request.problem_description}</p>
                 </div>
+
+                {request.technician_notes && (
+                  <div className="border-t pt-4">
+                    <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                      <p className="text-xs font-semibold text-blue-700 flex items-center gap-1.5 mb-1">
+                        <MessageSquareText className="size-3.5" />
+                        หมายเหตุจากช่าง
+                      </p>
+                      <p className="text-sm text-blue-900 whitespace-pre-wrap">{request.technician_notes}</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="border-t pt-4">
                   <p className="text-sm font-semibold text-gray-700 mb-1">ผู้แจ้ง</p>
                   <p className="text-sm text-gray-600">
@@ -237,7 +252,7 @@ export default function UpdateRepair() {
             <div className="space-y-2">
               <Label>หมายเหตุจากช่าง</Label>
               <Textarea
-                placeholder="กรุณากรอกรายละเอียดการซ่อม..."
+                placeholder="กรุณากรอกรายละเอียดการซ่อม (ข้อความนี้จะแสดงใน LINE OA)..."
                 rows={5}
                 value={updateData.technicianNotes}
                 onChange={(e) => setUpdateData({ ...updateData, technicianNotes: e.target.value })}

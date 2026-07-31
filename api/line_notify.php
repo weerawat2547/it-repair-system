@@ -38,7 +38,6 @@ function notifyRepairCreated(PDO $pdo, array $request): void {
     $msg .= "ปัญหา: {$request['problem_description']}\n";
     $msg .= "ความเร่งด่วน: " . priorityLabel($request['priority']) . "\n";
 
-    // แนบลิงก์รูปภาพ
     if (!empty($request['image_urls'])) {
         $msg .= "📷 รูปภาพ (" . count($request['image_urls']) . " รูป):\n";
         foreach ($request['image_urls'] as $i => $url) {
@@ -48,7 +47,6 @@ function notifyRepairCreated(PDO $pdo, array $request): void {
 
     $msg .= "เวลา: " . date('d/m/Y H:i');
 
-    // ส่งให้ admin และ technician ทุกคน
     $stmt = $pdo->prepare(
         "SELECT line_user_id FROM users
          WHERE role IN ('admin','technician')
@@ -64,43 +62,54 @@ function notifyRepairCreated(PDO $pdo, array $request): void {
     }
 }
 
-function notifyRepairUpdated(PDO $pdo, string $requestId, string $oldStatus, string $newStatus, string $changedBy): void {
-    // ดึงข้อมูลคำขอซ่อมและผู้แจ้ง
+function notifyRepairUpdated(PDO $pdo, string $requestId, string $oldStatus, string $newStatus, string $changedBy, string $technicianNotes = ''): void {
+    // ดึงข้อมูลคำขอซ่อมและชื่อผู้เปลี่ยนจาก DB
     $stmt = $pdo->prepare("
-        SELECT r.request_no, r.equipment_model, r.location_description,
+        SELECT r.*,
                u.name as requester_name, u.line_user_id as requester_line_id,
                c.name as changer_name
         FROM repair_requests r
         LEFT JOIN users u ON r.user_id = u.id
         LEFT JOIN users c ON c.id = ?
-        WHERE r.id = ?
+        WHERE r.id = ? OR r.request_no = ?
     ");
-    $stmt->execute([$changedBy, $requestId]);
-    $info = $stmt->fetch();
+    $stmt->execute([$changedBy, $requestId, $requestId]);
+    $info = $stmt->fetch(PDO::FETCH_ASSOC);
+
     if (!$info) return;
 
-    $msg = "📋 อัปเดตสถานะงานซ่อม\n";
-    $msg .= "เลขที่: {$info['request_no']}\n";
-    $msg .= "อุปกรณ์: {$info['equipment_model']}\n";
-    $msg .= "สถานที่: {$info['location_description']}\n";
+    // ดึงข้อความจาก DB หรือ Parameter
+    $dbNote = trim((string)($info['technician_notes'] ?? ''));
+    $paramNote = trim((string)$technicianNotes);
+    $finalNote = ($dbNote !== '') ? $dbNote : $paramNote;
+
+    // 🔴 ใส่แท็กทดสอบไว้ที่หัวข้อตรงนี้
+    $msg = "📋 [TEST-999] อัปเดตสถานะงานซ่อม\n";
+    $msg .= "เลขที่: " . ($info['request_no'] ?? $requestId) . "\n";
+    $msg .= "อุปกรณ์: " . ($info['equipment_model'] ?? '-') . "\n";
+    $msg .= "สถานที่: " . ($info['location_description'] ?? '-') . "\n";
     $msg .= "สถานะเดิม: " . statusLabel($oldStatus) . "\n";
     $msg .= "สถานะใหม่: " . statusLabel($newStatus) . "\n";
-    $msg .= "อัปเดตโดย: {$info['changer_name']}\n";
+    
+    // 🔹 บังคับแสดงบรรทัดหมายเหตุช่าง
+    $msg .= "💬 หมายเหตุจากช่าง: " . ($finalNote !== '' ? $finalNote : 'ไม่มีข้อมูลส่งมา') . "\n";
+
+    $msg .= "อัปเดตโดย: " . ($info['changer_name'] ?? 'ช่างเทคนิค') . "\n";
     $msg .= "เวลา: " . date('d/m/Y H:i');
 
-    // แจ้งเตือนผู้แจ้งซ่อม (นักศึกษา)
+    // ส่ง LINE หาผู้แจ้งซ่อม
     if (!empty($info['requester_line_id'])) {
         sendLineMessage($info['requester_line_id'], $msg);
     }
 
-    // แจ้งเตือน admin ทุกคน
-    $stmt = $pdo->prepare("
+    // ส่ง LINE หา Admin ทุกคน
+    $stmtAdmin = $pdo->prepare("
         SELECT line_user_id FROM users
         WHERE role = 'admin' AND is_active = 1
           AND line_user_id IS NOT NULL AND line_user_id != ''
     ");
-    $stmt->execute();
-    $admins = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $stmtAdmin->execute();
+    $admins = $stmtAdmin->fetchAll(PDO::FETCH_COLUMN);
     foreach ($admins as $adminId) {
         sendLineMessage($adminId, $msg);
     }

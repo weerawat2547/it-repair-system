@@ -136,7 +136,7 @@ export default function CheckStatus() {
                     </div>
                     <p className="text-slate-400 text-sm font-mono">#{request.request_no || request.id}</p>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-2 flex-wrap sm:justify-end">
                     {pr && (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
                         <span className={`size-1.5 rounded-full ${pr.dot}`} />
@@ -153,66 +153,84 @@ export default function CheckStatus() {
                 </div>
 
                 {/* Card body */}
-                <div className="px-6 py-4 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-start gap-2.5">
-                      <MapPin className="size-4 text-slate-400 mt-0.5 shrink-0" />
-                      <div>
-                        <p className="text-slate-500 text-xs mb-0.5">สถานที่</p>
-                        <p className="text-slate-700 text-sm">{request.location_description}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <Calendar className="size-4 text-slate-400 mt-0.5 shrink-0" />
-                      <div>
-                        <p className="text-slate-500 text-xs mb-0.5">วันที่แจ้ง</p>
-                        <p className="text-slate-700 text-sm">{fmtDate(request.created_at || request.createdAt)}</p>
-                      </div>
-                    </div>
-                    {currentUser?.role !== 'student' && request.user_name && (
-                      <div className="flex items-start gap-2.5">
-                        <User className="size-4 text-slate-400 mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-slate-500 text-xs mb-0.5">ผู้แจ้ง</p>
-                          <p className="text-slate-700 text-sm">{request.user_name}</p>
-                          {request.user_phone && <p className="text-slate-400 text-xs">{request.user_phone}</p>}
+                <div className="px-6 py-5">
+                  <div className="flex flex-col md:flex-row items-start justify-between gap-6">
+                    {/* Left details section */}
+                    <div className="flex-1 w-full space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex items-start gap-2.5">
+                          <MapPin className="size-4 text-slate-400 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-slate-500 text-xs mb-0.5">สถานที่</p>
+                            <p className="text-slate-700 text-sm">{request.location_description}</p>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {request.technician_name && (
-                      <div className="flex items-start gap-2.5">
-                        <Wrench className="size-4 text-slate-400 mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-slate-500 text-xs mb-0.5">ช่างผู้รับผิดชอบ</p>
-                          <p className="text-slate-700 text-sm">{request.technician_name}</p>
+                        <div className="flex items-start gap-2.5">
+                          <Calendar className="size-4 text-slate-400 mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-slate-500 text-xs mb-0.5">วันที่แจ้ง</p>
+                            <p className="text-slate-700 text-sm">{fmtDate(request.created_at || request.createdAt)}</p>
+                          </div>
                         </div>
+                        {currentUser?.role !== 'student' && request.user_name && (
+                          <div className="flex items-start gap-2.5">
+                            <User className="size-4 text-slate-400 mt-0.5 shrink-0" />
+                            <div>
+                              <p className="text-slate-500 text-xs mb-0.5">ผู้แจ้ง</p>
+                              <p className="text-slate-700 text-sm">{request.user_name}</p>
+                              {request.user_phone && <p className="text-slate-400 text-xs">{request.user_phone}</p>}
+                            </div>
+                          </div>
+                        )}
+                        {request.technician_name && (
+                          <div className="flex items-start gap-2.5">
+                            <Wrench className="size-4 text-slate-400 mt-0.5 shrink-0" />
+                            <div>
+                              <p className="text-slate-500 text-xs mb-0.5">ช่างผู้รับผิดชอบ</p>
+                              <p className="text-slate-700 text-sm">{request.technician_name}</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Problem */}
-                  <div className="bg-slate-50 rounded-xl px-4 py-3">
-                    <p className="text-slate-500 text-xs mb-1">รายละเอียดปัญหา</p>
-                    <p className="text-slate-700 text-sm">{request.problem_description}</p>
-                  </div>
+                      {/* Problem */}
+                      <div className="bg-slate-50 rounded-xl px-4 py-3">
+                        <p className="text-slate-500 text-xs mb-1">รายละเอียดปัญหา</p>
+                        <p className="text-slate-700 text-sm">{request.problem_description}</p>
+                      </div>
 
-                  {/* Technician notes */}
-                  {request.technician_notes && (
-                    <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-100">
-                      <p className="text-blue-600 text-xs font-medium mb-1">หมายเหตุจากช่าง</p>
-                      <p className="text-blue-700 text-sm">{request.technician_notes}</p>
+                      {/* Technician notes */}
+                      {request.technician_notes && (
+                        <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-100">
+                          <p className="text-blue-600 text-xs font-medium mb-1">หมายเหตุจากช่าง</p>
+                          <p className="text-blue-700 text-sm">{request.technician_notes}</p>
+                        </div>
+                      )}
+
+                      {/* Completed at */}
+                      {request.completed_at && (
+                        <div className="bg-green-50 rounded-xl px-4 py-2.5 border border-green-100 flex items-center gap-2">
+                          <CheckCircle className="size-4 text-green-600 shrink-0" />
+                          <p className="text-green-700 text-sm">
+                            เสร็จสิ้นเมื่อ {fmtDate(request.completed_at)}
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
 
-                  {/* Completed at */}
-                  {request.completed_at && (
-                    <div className="bg-green-50 rounded-xl px-4 py-2.5 border border-green-100 flex items-center gap-2">
-                      <CheckCircle className="size-4 text-green-600 shrink-0" />
-                      <p className="text-green-700 text-sm">
-                        เสร็จสิ้นเมื่อ {fmtDate(request.completed_at)}
-                      </p>
+                    {/* Right side: Enlarged QR Code container */}
+                    <div className="w-full md:w-auto flex flex-col items-center justify-center p-3 bg-slate-50/80 border border-slate-200/80 rounded-2xl shrink-0 self-center md:self-start">
+                      <img
+                        src="/line-oa-qr.jpg"
+                        alt="สแกนเพื่อติดตามสถานะผ่าน LINE OA"
+                        title="สแกนเพื่อติดตามสถานะผ่าน LINE OA"
+                        className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm object-contain"
+                      />
+                      <span className="text-xs text-slate-500 font-medium mt-2 text-center">
+                        สแกนติดตามผ่าน LINE OA
+                      </span>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             );

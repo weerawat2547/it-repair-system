@@ -1,7 +1,22 @@
 <?php
-require_once 'config.php';
-require_once 'line_notify.php';
-require_once 'cloudinary_upload.php';
+// 1. กำหนด CORS Header สำหรับรองรับ React Frontend
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// 2. ดึงไฟล์ที่เกี่ยวข้องโดยใช้อ้างอิงพาธโฟลเดอร์ปัจจุบัน (__DIR__)
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/line_notify.php';
+
+if (file_exists(__DIR__ . '/cloudinary_upload.php')) {
+    require_once __DIR__ . '/cloudinary_upload.php';
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -10,10 +25,8 @@ switch ($method) {
         getRequests();
         break;
     case 'POST':
-        createRequest();
-        break;
     case 'PUT':
-        updateRequest();
+        updateOrCreateRequest();
         break;
     case 'DELETE':
         deleteRequest();
@@ -36,8 +49,8 @@ function getRequests() {
             LEFT JOIN users u ON r.user_id = u.id
             LEFT JOIN users t ON r.assigned_to = t.id
             LEFT JOIN equipment_types et ON r.equipment_type_id = et.id
-            WHERE r.id = ?");
-        $stmt->execute([$id]);
+            WHERE r.id = ? OR r.request_no = ?");
+        $stmt->execute([$id, $id]);
         $req = $stmt->fetch();
         echo json_encode(["success" => true, "data" => $req]);
         return;
@@ -67,32 +80,31 @@ function getRequests() {
     echo json_encode(["success" => true, "data" => $requests]);
 }
 
-function createRequest() {
+function updateOrCreateRequest() {
+    global $pdo;
+    
+    $rawInput = file_get_contents("php://input");
+    $data = json_decode($rawInput, true) ?? [];
+
+    if (!empty($data['id']) || !empty($_POST['id'])) {
+        updateRequest($data);
+    } else {
+        createRequest($data);
+    }
+}
+
+function createRequest(array $data) {
     global $pdo;
 
-    // รองรับทั้ง FormData และ JSON
-    if (!empty($_POST)) {
-        $userId              = $_POST['user_id']              ?? '';
-        $equipmentTypeId     = !empty($_POST['equipment_type_id']) ? (int)$_POST['equipment_type_id'] : null;
-        $equipmentModel      = $_POST['equipment_model']      ?? '';
-        $serialNumber        = $_POST['serial_number']        ?? '';
-        $locationDescription = $_POST['location_description'] ?? '';
-        $locationLat         = !empty($_POST['location_lat']) ? (float)$_POST['location_lat'] : null;
-        $locationLng         = !empty($_POST['location_lng']) ? (float)$_POST['location_lng'] : null;
-        $problemDescription  = $_POST['problem_description']  ?? '';
-        $priority            = $_POST['priority']             ?? 'medium';
-    } else {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $userId              = $data['user_id']              ?? '';
-        $equipmentTypeId     = !empty($data['equipment_type_id']) ? (int)$data['equipment_type_id'] : null;
-        $equipmentModel      = $data['equipment_model']      ?? '';
-        $serialNumber        = $data['serial_number']        ?? '';
-        $locationDescription = $data['location_description'] ?? '';
-        $locationLat         = !empty($data['location_lat']) ? (float)$data['location_lat'] : null;
-        $locationLng         = !empty($data['location_lng']) ? (float)$data['location_lng'] : null;
-        $problemDescription  = $data['problem_description']  ?? '';
-        $priority            = $data['priority']             ?? 'medium';
-    }
+    $userId              = $data['user_id']              ?? $_POST['user_id']              ?? '';
+    $equipmentTypeId     = !empty($data['equipment_type_id']) ? (int)$data['equipment_type_id'] : (!empty($_POST['equipment_type_id']) ? (int)$_POST['equipment_type_id'] : null);
+    $equipmentModel      = $data['equipment_model']      ?? $_POST['equipment_model']      ?? '';
+    $serialNumber        = $data['serial_number']        ?? $_POST['serial_number']        ?? '';
+    $locationDescription = $data['location_description'] ?? $_POST['location_description'] ?? '';
+    $locationLat         = !empty($data['location_lat']) ? (float)$data['location_lat'] : (!empty($_POST['location_lat']) ? (float)$_POST['location_lat'] : null);
+    $locationLng         = !empty($data['location_lng']) ? (float)$data['location_lng'] : (!empty($_POST['location_lng']) ? (float)$_POST['location_lng'] : null);
+    $problemDescription  = $data['problem_description']  ?? $_POST['problem_description']  ?? '';
+    $priority            = $data['priority']             ?? $_POST['priority']             ?? 'medium';
 
     if (!$userId || !$locationDescription || !$problemDescription) {
         http_response_code(400);
@@ -100,7 +112,6 @@ function createRequest() {
         return;
     }
 
-    // อัปโหลดรูปภาพไปยัง Cloudinary
     $imageUrls = [];
     if (!empty($_FILES['images'])) {
         $files = $_FILES['images'];
@@ -108,15 +119,15 @@ function createRequest() {
         for ($i = 0; $i < $count; $i++) {
             $tmpName = is_array($files['tmp_name']) ? $files['tmp_name'][$i] : $files['tmp_name'];
             $error   = is_array($files['error'])    ? $files['error'][$i]    : $files['error'];
-            if ($error === UPLOAD_ERR_OK) {
+            if ($error === UPLOAD_ERR_OK && function_exists('uploadToCloudinary')) {
                 $url = uploadToCloudinary($tmpName, 'it_repair');
                 if ($url) $imageUrls[] = $url;
             }
         }
     }
 
-    $id        = uniqid('REQ-', true);
-    $requestNo = 'REQ-' . date('Y') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+    $id         = uniqid('REQ-', true);
+    $requestNo  = 'REQ-' . date('Y') . '-' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
     $imagesJson = !empty($imageUrls) ? json_encode($imageUrls) : null;
 
     $stmt = $pdo->prepare("INSERT INTO repair_requests
@@ -126,28 +137,37 @@ function createRequest() {
     $stmt->execute([$id, $requestNo, $userId, $equipmentTypeId, $equipmentModel, $serialNumber,
         $locationDescription, $locationLat, $locationLng, $problemDescription, $priority, $imagesJson]);
 
-    // แจ้งเตือน LINE
-    notifyRepairCreated($pdo, [
-        'request_no'           => $requestNo,
-        'equipment_model'      => $equipmentModel,
-        'location_description' => $locationDescription,
-        'problem_description'  => $problemDescription,
-        'priority'             => $priority,
-        'image_urls'           => $imageUrls,
-    ]);
+    if (function_exists('notifyRepairCreated')) {
+        notifyRepairCreated($pdo, [
+            'request_no'           => $requestNo,
+            'equipment_model'      => $equipmentModel,
+            'location_description' => $locationDescription,
+            'problem_description'  => $problemDescription,
+            'priority'             => $priority,
+            'image_urls'           => $imageUrls,
+        ]);
+    }
 
     echo json_encode(["success" => true, "message" => "แจ้งซ่อมสำเร็จ", "id" => $id, "request_no" => $requestNo]);
 }
 
-function updateRequest() {
+function updateRequest(array $data) {
     global $pdo;
-    $data = json_decode(file_get_contents("php://input"), true);
 
-    $id              = $data['id']               ?? '';
-    $status          = $data['status']           ?? '';
-    $assignedTo      = $data['assigned_to']      ?? null;
-    $technicianNotes = $data['technician_notes'] ?? '';
-    $changedBy       = $data['changed_by']       ?? '';
+    $id         = $data['id']          ?? $_POST['id']          ?? '';
+    $status     = $data['status']      ?? $_POST['status']      ?? '';
+    $assignedTo = $data['assigned_to'] ?? $data['assignedTo']   ?? $_POST['assigned_to'] ?? null;
+    $changedBy  = $data['changed_by']  ?? $data['changedBy']    ?? $_POST['changed_by']  ?? '';
+
+    $technicianNotes = $data['technician_notes'] 
+                    ?? $data['technicianNotes'] 
+                    ?? $data['notes'] 
+                    ?? $data['note']
+                    ?? $_POST['technician_notes'] 
+                    ?? $_POST['technicianNotes'] 
+                    ?? $_POST['notes'] 
+                    ?? $_POST['note'] 
+                    ?? '';
 
     if (!$id || !$status) {
         http_response_code(400);
@@ -155,29 +175,23 @@ function updateRequest() {
         return;
     }
 
-    // ดึงข้อมูลเก่า
-    $stmt = $pdo->prepare("SELECT status, assigned_to FROM repair_requests WHERE id = ?");
-    $stmt->execute([$id]);
-    $old = $stmt->fetch();
+    // ดึงสถานะเดิม
+    $stmt = $pdo->prepare("SELECT status FROM repair_requests WHERE id = ? OR request_no = ?");
+    $stmt->execute([$id, $id]);
+    $old = $stmt->fetch(PDO::FETCH_ASSOC);
+    $oldStatus = $old['status'] ?? 'pending';
 
     $completedAt = ($status === 'completed') ? date('Y-m-d H:i:s') : null;
 
+    // อัปเดตข้อมูลลงฐานข้อมูล MySQL
     $stmt = $pdo->prepare("UPDATE repair_requests
         SET status = ?, assigned_to = ?, technician_notes = ?, updated_at = NOW(), completed_at = ?
-        WHERE id = ?");
-    $stmt->execute([$status, $assignedTo, $technicianNotes, $completedAt, $id]);
+        WHERE id = ? OR request_no = ?");
+    $stmt->execute([$status, $assignedTo, $technicianNotes, $completedAt, $id, $id]);
 
-    // บันทึกประวัติ
-    $historyId = uniqid('hist_', true);
-    $stmt = $pdo->prepare("INSERT INTO repair_status_history
-        (id, repair_request_id, changed_by, old_status, new_status, old_assigned_to, new_assigned_to, note)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$historyId, $id, $changedBy, $old['status'], $status,
-        $old['assigned_to'], $assignedTo, $technicianNotes]);
-
-    // แจ้งเตือน LINE เมื่อสถานะเปลี่ยน
-    if ($old['status'] !== $status) {
-        notifyRepairUpdated($pdo, $id, $old['status'], $status, $changedBy);
+    // ส่งการแจ้งเตือน LINE Notify
+    if (function_exists('notifyRepairUpdated')) {
+        notifyRepairUpdated($pdo, $id, $oldStatus, $status, $changedBy, $technicianNotes);
     }
 
     echo json_encode(["success" => true, "message" => "อัปเดตสำเร็จ"]);
@@ -191,7 +205,7 @@ function deleteRequest() {
         echo json_encode(["success" => false, "message" => "ไม่พบ ID"]);
         return;
     }
-    $stmt = $pdo->prepare("DELETE FROM repair_requests WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt = $pdo->prepare("DELETE FROM repair_requests WHERE id = ? OR request_no = ?");
+    $stmt->execute([$id, $id]);
     echo json_encode(["success" => true, "message" => "ลบสำเร็จ"]);
 }
